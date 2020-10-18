@@ -3,12 +3,13 @@ from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
 
 from .serializers import (UserCreateSerializer,
-                          UserLoginSerializer, GYMListSerializer, ClassesListSerializer)
+                          UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
 from .models import GYM, Type, Classes, Booking
 
 
@@ -39,6 +40,7 @@ class GYMListView(ListAPIView):
     queryset = GYM.objects.all()
     serializer_class = GYMListSerializer
     permission_classes = [AllowAny]
+    filter_backends = [SearchFilter, OrderingFilter]
 
 
 # List of * all * classes
@@ -48,6 +50,7 @@ class AllClassesListView(ListAPIView):
     queryset = Classes.objects.all()
     serializer_class = ClassesListSerializer
     permission_classes = [AllowAny]
+    filter_backends = [SearchFilter, OrderingFilter]
 
 
 # List of * new * classes
@@ -56,4 +59,15 @@ class AllClassesListView(ListAPIView):
 class NewClassesListView(ListAPIView):
     queryset = Classes.objects.filter(start__gt=now())
     serializer_class = ClassesListSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [SearchFilter, OrderingFilter]
+
+# Detail of classes
+
+
+class ClassDetails(RetrieveAPIView):
+    queryset = Classes.objects.all()
+    serializer_class = ClassesDetailSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'class_id'
     permission_classes = [AllowAny]

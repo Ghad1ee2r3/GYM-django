@@ -65,5 +65,24 @@ class ClassesListSerializer(serializers.ModelSerializer):  # classes list
 
     class Meta:
         model = Classes
+        fields = ['gym', 'type_of', 'id', 'name',
+                  'limits', 'start', 'price', 'img']
+
+
+class ClassesDetailSerializer(serializers.ModelSerializer):  # classes list
+
+    gym = serializers.SlugRelatedField(
+        many=False,  # it's by Default
+        read_only=True,
+        slug_field='name'
+    )
+    type_of = serializers.SlugRelatedField(
+        many=False,  # it's by Default
+        read_only=True,
+        slug_field='name'
+    )
+
+    class Meta:
+        model = Classes
         fields = ['gym', 'type_of', 'id', 'name', 'limits',
                   'description', 'start', 'end', 'price', 'img']

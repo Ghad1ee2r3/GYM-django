@@ -29,7 +29,7 @@ class Classes(models.Model):
     description = models.TextField()
     start = models.DateTimeField(default=now)
     end = models.DateTimeField(default=now)
-    price = models.DecimalField(decimal_places=2, max_digits=2)
+    price = models.DecimalField(decimal_places=2, max_digits=4)
     img = models.ImageField(blank=True)
 
     def __str__(self):
