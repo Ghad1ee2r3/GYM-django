@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.timezone import now
 from rest_framework import exceptions
@@ -14,6 +16,7 @@ from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreate
                           ClassesListSerializer, ClassesDetailSerializer, BookingListSerializer)
 from .models import GYM, Type, Classes, Booking
 from .permissions import IsBookingOwner, IsChangable
+
 
 # Register
 
@@ -104,12 +107,17 @@ class BookClass(CreateAPIView):
         new_class_obj = Classes.objects.get(id=self.kwargs['class_id'])
         if Booking.objects.filter(customer=self.request.user, class_of=new_class_obj):
             raise exceptions.ParseError({"error": ["You Are Already In"]})
+        email = self.request.user.email
+        sub = 'Class Booking information'
+        msg = 'Congratulation '
+        send_mail(sub, msg, settings.EMAIL_HOST_USER,
+                  [email, ], fail_silently=False)
         if new_class_obj.limits > 0:
             new_class_obj.limits -= 1
             new_class_obj.save()
             return serializer.save(customer=self.request.user, class_of_id=self.kwargs['class_id'])
         else:
-            raise exceptions.ParseError({"error": ["No More tickets"]})
+            raise exceptions.ParseError({"error": ["Full"]})
 
 
 # Cancel Booking
