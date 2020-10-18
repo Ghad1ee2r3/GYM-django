@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
 
-from .serializers import (UserCreateSerializer, GYMCreateSerializer,
+from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer,
                           UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
 from .models import GYM, Type, Classes, Booking
 
@@ -72,9 +72,23 @@ class ClassDetails(RetrieveAPIView):
     lookup_url_kwarg = 'class_id'
     permission_classes = [AllowAny]
 
-# Create of GYM
+# Create GYM
 
 
 class CreateGYM(CreateAPIView):
     serializer_class = GYMCreateSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+# Create Class
+
+
+class CreateClass(CreateAPIView):
+    serializer_class = ClassCreateSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def perform_create(self, serializer):
+        new_gym = GYM.objects.get(id=self.kwargs['gym_id'])
+        new_gym.number_of_classes += 1
+        new_gym.save()
+        serializer.save(
+            gym_id=self.kwargs['gym_id'], type_of_id=self.kwargs['type_id'])

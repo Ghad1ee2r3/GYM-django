@@ -92,3 +92,10 @@ class GYMCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = GYM
         fields = ['name', 'number_of_classes', 'location']
+
+
+class ClassCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classes
+        fields = ['name', 'limits',
+                  'description', 'start', 'end', 'price', 'img']
