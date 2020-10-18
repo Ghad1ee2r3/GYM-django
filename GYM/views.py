@@ -2,13 +2,13 @@ from django.shortcuts import render
 from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
 
-from .serializers import (UserCreateSerializer,
+from .serializers import (UserCreateSerializer, GYMCreateSerializer,
                           UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
 from .models import GYM, Type, Classes, Booking
 
@@ -71,3 +71,10 @@ class ClassDetails(RetrieveAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'class_id'
     permission_classes = [AllowAny]
+
+# Create of GYM
+
+
+class CreateGYM(CreateAPIView):
+    serializer_class = GYMCreateSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]

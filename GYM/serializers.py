@@ -86,3 +86,9 @@ class ClassesDetailSerializer(serializers.ModelSerializer):  # classes list
         model = Classes
         fields = ['gym', 'type_of', 'id', 'name', 'limits',
                   'description', 'start', 'end', 'price', 'img']
+
+
+class GYMCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GYM
+        fields = ['name', 'number_of_classes', 'location']

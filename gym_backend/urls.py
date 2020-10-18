@@ -34,7 +34,11 @@ urlpatterns = [
 
     # Details
     path('gym/api/classes/<int:class_id>/',
-         views.ClassDetails.as_view(), name="class-detail"),
+         views.ClassDetails.as_view(), name="class-detail"),  # class
+
+    # Create
+    path('gym/api/create-gym/',
+         views.CreateGYM.as_view(), name="create-gym"),  # GYM
 
 
 ]
