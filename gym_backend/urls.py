@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('login/', TokenObtainPairView.as_view(), name='login'),
-    path('apilogin/', views.UserLoginAPIView.as_view(), name='api-login'),
-    path('register/', views.UserCreateAPIView.as_view(), name="register"),
+    path('gym/api/login/', TokenObtainPairView.as_view(), name='login'),
+    path('gym/api/apilogin/', views.UserLoginAPIView.as_view(), name='api-login'),
+    path('gym/api/register/', views.UserCreateAPIView.as_view(), name="register"),
 ]
