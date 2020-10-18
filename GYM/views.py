@@ -130,7 +130,10 @@ class CancelBooking(DestroyAPIView):
 # Booking List
 
 class BookingListView(ListAPIView):
-    queryset = Booking.objects.all()
+
     serializer_class = BookingListSerializer
-    permission_classes = [IsBookingOwner]
+    permission_classes = [IsAuthenticated, IsBookingOwner]
     filter_backends = [SearchFilter, OrderingFilter]
+
+    def get_queryset(self):
+        return Booking.objects.filter(customer=self.request.user)
