@@ -105,3 +105,20 @@ class BookCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         exclude = ['customer', 'class_of', 'time']
+
+
+class BookingListSerializer(serializers.ModelSerializer):
+    customer = serializers.SlugRelatedField(
+        many=False,  # it's by Default
+        read_only=True,
+        slug_field='username'
+    )
+    class_of = serializers.SlugRelatedField(
+        many=False,  # it's by Default
+        read_only=True,
+        slug_field='name'
+    )
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'customer', 'class_of', 'time']

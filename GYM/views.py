@@ -9,8 +9,9 @@ from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView)
 
-from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer, BookCreateSerializer,
-                          UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
+from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer,
+                          BookCreateSerializer, UserLoginSerializer, GYMListSerializer,
+                          ClassesListSerializer, ClassesDetailSerializer, BookingListSerializer)
 from .models import GYM, Type, Classes, Booking
 from .permissions import IsBookingOwner, IsChangable
 
@@ -46,7 +47,6 @@ class GYMListView(ListAPIView):
 
 # List of * all * classes
 
-
 class AllClassesListView(ListAPIView):
     queryset = Classes.objects.all()
     serializer_class = ClassesListSerializer
@@ -56,15 +56,14 @@ class AllClassesListView(ListAPIView):
 
 # List of * new * classes
 
-
 class NewClassesListView(ListAPIView):
     queryset = Classes.objects.filter(start__gt=now())
     serializer_class = ClassesListSerializer
     permission_classes = [AllowAny]
     filter_backends = [SearchFilter, OrderingFilter]
 
-# Detail of classes
 
+# Detail of classes
 
 class ClassDetails(RetrieveAPIView):
     queryset = Classes.objects.all()
@@ -80,8 +79,8 @@ class CreateGYM(CreateAPIView):
     serializer_class = GYMCreateSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
 
-# Create Class
 
+# Create Class
 
 class CreateClass(CreateAPIView):
     serializer_class = ClassCreateSerializer
@@ -96,7 +95,6 @@ class CreateClass(CreateAPIView):
 
 
 # Book Class
-
 
 class BookClass(CreateAPIView):
     serializer_class = BookCreateSerializer
@@ -114,6 +112,8 @@ class BookClass(CreateAPIView):
             raise exceptions.ParseError({"error": ["No More tickets"]})
 
 
+# Cancel Booking
+
 class CancelBooking(DestroyAPIView):
     queryset = Booking.objects.all()
     lookup_field = 'id'
@@ -125,3 +125,12 @@ class CancelBooking(DestroyAPIView):
         new_class_obj.limits += 1
         new_class_obj.save()
         instance.delete()
+
+
+# Booking List
+
+class BookingListView(ListAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingListSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [SearchFilter, OrderingFilter]
