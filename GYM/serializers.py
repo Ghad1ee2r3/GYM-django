@@ -118,10 +118,20 @@ class BookingListSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='name'
     )
+    start = serializers.SerializerMethodField()
+    end = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
-        fields = ['id', 'customer', 'class_of', 'time']
+        fields = ['id', 'customer', 'class_of', 'time', 'start', 'end']
+
+    def get_start(self, obj):
+        class_start = obj.class_of.start
+        return class_start
+
+    def get_end(self, obj):
+        class_end = obj.class_of.end
+        return class_end
 
 
 class TypesListSerializer(serializers.ModelSerializer):
