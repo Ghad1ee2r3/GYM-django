@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils.timezone import now
+from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
@@ -8,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
 
-from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer,
+from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer, BookCreateSerializer,
                           UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
 from .models import GYM, Type, Classes, Booking
 
@@ -92,3 +93,22 @@ class CreateClass(CreateAPIView):
         new_gym.save()
         serializer.save(
             gym_id=self.kwargs['gym_id'], type_of_id=self.kwargs['type_id'])
+
+
+# Book Class
+
+
+class BookClass(CreateAPIView):
+    serializer_class = BookCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        new_class_obj = Classes.objects.get(id=self.kwargs['class_id'])
+        if Booking.objects.filter(customer=self.request.user, class_of=new_class_obj):
+            raise exceptions.ParseError({"error": ["You Are Already In"]})
+        if new_class_obj.limits > 0:
+            new_class_obj.limits -= 1
+            new_class_obj.save()
+            return serializer.save(customer=self.request.user, class_of_id=self.kwargs['class_id'])
+        else:
+            raise exceptions.ParseError({"error": ["No More tickets"]})

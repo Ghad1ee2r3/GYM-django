@@ -99,3 +99,9 @@ class ClassCreateSerializer(serializers.ModelSerializer):
         model = Classes
         fields = ['name', 'limits',
                   'description', 'start', 'end', 'price', 'img']
+
+
+class BookCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        exclude = ['customer', 'class_of', 'time']
