@@ -42,3 +42,9 @@ class UserLoginSerializer(serializers.Serializer):
                 "Incorrect username/password combination! Noob..")
 
         return data
+
+
+class GYMListSerializer(serializers.ModelSerializer):  # GYM list
+    class Meta:
+        model = GYM
+        fields = ['id', 'name', 'number_of_classes', 'location']
