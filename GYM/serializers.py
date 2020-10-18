@@ -122,3 +122,9 @@ class BookingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['id', 'customer', 'class_of', 'time']
+
+
+class TypesListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Type
+        fields = ['id', 'name']

@@ -10,7 +10,7 @@ from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView)
 
 from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer,
-                          BookCreateSerializer, UserLoginSerializer, GYMListSerializer,
+                          BookCreateSerializer, UserLoginSerializer, GYMListSerializer, TypesListSerializer,
                           ClassesListSerializer, ClassesDetailSerializer, BookingListSerializer)
 from .models import GYM, Type, Classes, Booking
 from .permissions import IsBookingOwner, IsChangable
@@ -137,3 +137,9 @@ class BookingListView(ListAPIView):
 
     def get_queryset(self):
         return Booking.objects.filter(customer=self.request.user)
+
+
+class TypsListView(ListAPIView):
+    queryset = Type.objects.all()
+    serializer_class = TypesListSerializer
+    permission_classes = [AllowAny]

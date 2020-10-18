@@ -26,17 +26,21 @@ urlpatterns = [
     path('gym/api/register/', views.UserCreateAPIView.as_view(), name="register"),
 
     # lists
-    path('gym/api/gyms/', views.GYMListView.as_view(), name="gyms-list"),
+    path('gym/api/gyms/', views.GYMListView.as_view(), name="gyms-list"),  # GYMs
     path('gym/api/allclasses/', views.AllClassesListView.as_view(),
-         name="all-classes-list"),
+         name="all-classes-list"),  # class (all)
     path('gym/api/classes/', views.NewClassesListView.as_view(),
-         name="new-classes-list"),
+         name="new-classes-list"),  # class (new)
     path('gym/api/booking/', views.BookingListView.as_view(),
-         name="booking-list"),
+         name="booking-list"),  # booking
+    path('gym/api/typs/', views.TypsListView.as_view(),
+         name="typs-list"),  # typs
+
 
     # Details
     path('gym/api/classes/<int:class_id>/',
          views.ClassDetails.as_view(), name="class-detail"),  # class
+
 
     # Create
     path('gym/api/create-gym/',
@@ -47,6 +51,7 @@ urlpatterns = [
 
     path('gym/api/classes/<int:class_id>/book/',
          views.BookClass.as_view(), name="book-class"),  # booking
+
 
     # Cancel
     path('gym/api/booking/<int:booking_id>/cancel/',
