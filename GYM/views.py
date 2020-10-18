@@ -7,12 +7,12 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.generics import (
-    ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
+    ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView)
 
 from .serializers import (UserCreateSerializer, GYMCreateSerializer, ClassCreateSerializer, BookCreateSerializer,
                           UserLoginSerializer, GYMListSerializer, ClassesListSerializer, ClassesDetailSerializer)
 from .models import GYM, Type, Classes, Booking
-
+from .permissions import IsBookingOwner, IsChangable
 
 # Register
 
@@ -112,3 +112,16 @@ class BookClass(CreateAPIView):
             return serializer.save(customer=self.request.user, class_of_id=self.kwargs['class_id'])
         else:
             raise exceptions.ParseError({"error": ["No More tickets"]})
+
+
+class CancelBooking(DestroyAPIView):
+    queryset = Booking.objects.all()
+    lookup_field = 'id'
+    lookup_url_kwarg = 'booking_id'
+    permission_classes = [IsAuthenticated, IsBookingOwner, IsChangable]
+
+    def perform_destroy(self, instance):
+        new_class_obj = Classes.objects.get(id=instance.class_of.id)
+        new_class_obj.limits += 1
+        new_class_obj.save()
+        instance.delete()
