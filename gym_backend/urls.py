@@ -24,6 +24,11 @@ urlpatterns = [
     path('gym/api/login/', TokenObtainPairView.as_view(), name='login'),
     path('gym/api/apilogin/', views.UserLoginAPIView.as_view(), name='api-login'),
     path('gym/api/register/', views.UserCreateAPIView.as_view(), name="register"),
+
     # lists
     path('gym/api/gyms/', views.GYMListView.as_view(), name="gyms-list"),
+    path('gym/api/allclasses/', views.AllClassesListView.as_view(),
+         name="all-classes-list"),
+    path('gym/api/classes/', views.NewClassesListView.as_view(),
+         name="new-classes-list"),
 ]

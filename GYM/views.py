@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -7,7 +8,7 @@ from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView)
 
 from .serializers import (UserCreateSerializer,
-                          UserLoginSerializer, GYMListSerializer)
+                          UserLoginSerializer, GYMListSerializer, ClassesListSerializer)
 from .models import GYM, Type, Classes, Booking
 
 
@@ -37,4 +38,22 @@ class UserLoginAPIView(APIView):
 class GYMListView(ListAPIView):
     queryset = GYM.objects.all()
     serializer_class = GYMListSerializer
+    permission_classes = [AllowAny]
+
+
+# List of * all * classes
+
+
+class AllClassesListView(ListAPIView):
+    queryset = Classes.objects.all()
+    serializer_class = ClassesListSerializer
+    permission_classes = [AllowAny]
+
+
+# List of * new * classes
+
+
+class NewClassesListView(ListAPIView):
+    queryset = Classes.objects.filter(start__gt=now())
+    serializer_class = ClassesListSerializer
     permission_classes = [AllowAny]
