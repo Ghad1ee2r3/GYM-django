@@ -120,10 +120,11 @@ class BookingListSerializer(serializers.ModelSerializer):
     )
     start = serializers.SerializerMethodField()
     end = serializers.SerializerMethodField()
+    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
-        fields = ['id', 'customer', 'class_of', 'time', 'start', 'end']
+        fields = ['id', 'customer', 'class_of', 'time', 'start', 'end', 'img']
 
     def get_start(self, obj):
         class_start = obj.class_of.start
@@ -132,6 +133,10 @@ class BookingListSerializer(serializers.ModelSerializer):
     def get_end(self, obj):
         class_end = obj.class_of.end
         return class_end
+
+    def get_img(self, obj):
+        class_img = obj.class_of.img
+        return str(class_img)
 
 
 class TypesListSerializer(serializers.ModelSerializer):
