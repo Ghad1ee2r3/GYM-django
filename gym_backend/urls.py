@@ -60,4 +60,4 @@ urlpatterns = [
          views.CancelBooking.as_view(), name="cancel-booking"),  # booking
 
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

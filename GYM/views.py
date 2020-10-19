@@ -93,10 +93,6 @@ class CreateClass(CreateAPIView):
     def perform_create(self, serializer):
         new_gym = GYM.objects.get(id=self.kwargs['gym_id'])
         new_gym.number_of_classes += 1
-        if(new_gym.img == None):
-            if(new_gym.type_of == 'cardio'):
-                new_gym.img = 'img/man.jpg'
-
         new_gym.save()
         serializer.save(
             gym_id=self.kwargs['gym_id'], type_of_id=self.kwargs['type_id'])
