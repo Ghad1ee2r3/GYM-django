@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from GYM import views
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -57,6 +59,5 @@ urlpatterns = [
     path('gym/api/booking/<int:booking_id>/cancel/',
          views.CancelBooking.as_view(), name="cancel-booking"),  # booking
 
-
-
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.timezone import now
+from django.db.models.signals import post_save
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
@@ -92,6 +93,10 @@ class CreateClass(CreateAPIView):
     def perform_create(self, serializer):
         new_gym = GYM.objects.get(id=self.kwargs['gym_id'])
         new_gym.number_of_classes += 1
+        if(new_gym.img == None):
+            if(new_gym.type_of == 'cardio'):
+                new_gym.img = 'img/man.jpg'
+
         new_gym.save()
         serializer.save(
             gym_id=self.kwargs['gym_id'], type_of_id=self.kwargs['type_id'])
@@ -121,6 +126,8 @@ class BookClass(CreateAPIView):
             return serializer.save(customer=self.request.user, class_of_id=self.kwargs['class_id'])
         else:
             raise exceptions.ParseError({"error": ["Full"]})
+
+        post_save(send_email, sender=Booking)
 
 
 # Cancel Booking
