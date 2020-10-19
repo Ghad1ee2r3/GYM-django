@@ -109,12 +109,6 @@ class BookClass(CreateAPIView):
         if Booking.objects.filter(customer=self.request.user, class_of=new_class_obj):
             raise exceptions.ParseError({"error": ["You Are Already In"]})
 
-        email = self.request.user.email
-        sub = 'Class Booking information'
-        msg = f'Congratulations " {self.request.user} " for being a member of " {new_class_obj.name} " class.\nIt will start: {new_class_obj.start}.\nEnd: {new_class_obj.end}.'
-        send_mail(sub, str(msg), settings.EMAIL_HOST_USER,
-                  [email, ], fail_silently=False)
-
         if new_class_obj.limits > 0:
             new_class_obj.limits -= 1
             new_class_obj.save()

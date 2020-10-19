@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from django.core.mail import send_mail
+from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.template.loader import render_to_string
 
 # Create your models here.
 
@@ -43,3 +48,14 @@ class Booking(models.Model):
 
     def __str__(self):
         return self.class_of.name
+
+
+@receiver(post_save, sender=Booking)
+def get_email(instance, *args, **kwargs):
+    email = instance.customer.email
+    sub = 'Class Booking information'
+    msg = render_to_string('email.html', {'name': instance.customer.username, 'class': instance.class_of.name,
+                                          'start': instance.class_of.start, 'end': instance.class_of.end, 'id': instance.id})
+    #msg = f'Congratulations " {instance.customer.username} " for being a member of " {instance.class_of.name} " class.\nIt will start: {instance.class_of.start}.\nEnd: {instance.class_of.end}.\nYour booking id: {instance.id}\n\n Thank You'
+    send_mail(sub, msg, settings.EMAIL_HOST_USER,
+              [email, ], fail_silently=False)
